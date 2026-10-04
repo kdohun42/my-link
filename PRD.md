@@ -1,6 +1,6 @@
 # 📄 [PRD] 링크트리 클론 서비스: 마이링크 (MyLink) 기능 정의서
-> **문서 버전**: v1.3 (사용자 시나리오 추가 및 단계별 시연 지향 개정판)  
-> **핵심 원칙**: 단계별 구현(Phased Delivery). **현재 1단계는 외부 백엔드·대시보드·통계 없이 '로컬 스토리지'와 '프로필 페이지' 중심으로 시연 가능한 MVP 완성**에 집중합니다.
+> **문서 버전**: v1.4 (shadcn/ui 디자인 시스템 기반 구성 명세 반영)  
+> **핵심 원칙**: 단계별 구현(Phased Delivery). **현재 1단계는 외부 백엔드·대시보드·통계 없이 '로컬 스토리지'와 '프로필 페이지' 중심으로 시연 가능한 MVP 완성**에 집중합니다. 모든 UI 및 디자인 시스템은 **shadcn/ui** 기반으로 구축 및 유지 관리합니다.
 
 ---
 
@@ -155,7 +155,12 @@ flowchart LR
 ```
 [ 브라우저 클라이언트 ]
   ├── Next.js 16 (App Router, React 19, TypeScript)
-  ├── Tailwind CSS v4 (반응형 모바일 UI, 테마 토글)
+  ├── Tailwind CSS v4 (반응형 모바일 UI, 테마 토글 — config 파일 없는 CSS-first 방식)
+  ├── shadcn/ui (디자인 시스템 기반 — 모든 UI 컴포넌트는 shadcn/ui 기준으로 구축)
+  │     ├── Base UI (Radix UI 기반 헤드리스 컴포넌트)
+  │     ├── class-variance-authority (컴포넌트 변형 관리)
+  │     ├── tailwind-merge / clsx (조건부 클래스 병합)
+  │     └── tw-animate-css (애니메이션 유틸리티)
   ├── Lucide React (소셜 미디어 및 링크 아이콘)
   └── Zustand (create & persist 미들웨어)
            │
@@ -163,6 +168,18 @@ flowchart LR
 [ 브라우저 로컬 스토리지 (localStorage) ]
   └── 키: 'mylink_profile_store' (프로필, 링크 목록, 현재 테마 보관)
 ```
+
+### 디자인 시스템 원칙 (shadcn/ui 기반)
+
+> **모든 UI 구현은 shadcn/ui를 기준으로 진행합니다.**
+
+| 항목 | 내용 |
+| :--- | :--- |
+| **컴포넌트 추가** | `npx shadcn@latest add <component>` 명령어로 컴포넌트를 직접 소스에 추가 |
+| **스타일 정의** | `src/app/globals.css`의 CSS 변수(`--background`, `--primary` 등)로 테마 관리 |
+| **아이콘** | Lucide React (`lucide-react`) 통일 사용 |
+| **컴포넌트 경로** | `src/components/ui/` 하위에 shadcn/ui 컴포넌트 배치 |
+| **유틸리티** | `src/lib/utils.ts`의 `cn()` 함수로 클래스 병합 |
 
 ---
 
