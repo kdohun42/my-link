@@ -34,13 +34,15 @@ export default function ProfilePage() {
         <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
           김도훈
         </h1>
-        <p className="mt-1 text-sm font-medium text-indigo-600 dark:text-indigo-400">
-          Robotics Undergraduate
-        </p>
+        <div className="mt-1.5 flex items-center justify-center gap-1.5 text-sm font-medium text-indigo-600 dark:text-indigo-400">
+          <span>광운대학교</span>
+          <span>•</span>
+          <span>로봇학부</span>
+        </div>
 
         {/* Bio */}
         <p className="mt-4 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 max-w-sm">
-          안녕하세요. 로보틱스를 공부하고 있는 학부생입니다.
+          안녕하세요! 광운대학교 로봇학부에서 로보틱스를 공부하고 있는 김도훈입니다.
         </p>
 
         {/* Interest Tags */}
