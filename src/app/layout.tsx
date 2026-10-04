@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "김도훈 | 프로필",
-  description: "안녕하세요. 로보틱스를 공부하고 있는 학부생 김도훈입니다.",
+  title: "김도훈 | Robotics Engineer & Student",
+  description: "광운대학교 로봇학부 김도훈의 인터랙티브 프로필 & 링크트리",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
