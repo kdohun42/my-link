@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { RotateCcw } from "lucide-react";
 import { LinkList } from "@/components/link-list";
-import type { LinkItem } from "@/lib/data";
-import linksData from "@/data/links.json";
+import { AddLinkDialog } from "@/components/add-link-dialog";
+import { useLinks } from "@/store/use-profile-store";
 
 export default function ProfilePage() {
+  const { links, resetLinks } = useLinks();
   const [activeTab, setActiveTab] = useState<"links" | "specs" | "projects">("links");
   const [copied, setCopied] = useState(false);
   const [boostCount, setBoostCount] = useState(88);
@@ -218,7 +220,30 @@ export default function ProfilePage() {
         {/* TAB 1: LINKS & CHANNELS */}
         {activeTab === "links" && (
           <div className="flex flex-col gap-4">
-            <LinkList links={linksData as LinkItem[]} />
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#65676b]">
+                  채널 목록 ({links.length})
+                </span>
+                <button
+                  type="button"
+                  onClick={resetLinks}
+                  className="inline-flex items-center gap-1 text-[11px] text-[#8a8d91] hover:text-[#0f1419] transition-colors cursor-pointer"
+                  title="기본 시드 데이터로 초기화"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>초기화</span>
+                </button>
+              </div>
+              <AddLinkDialog
+                buttonText="링크 추가"
+                buttonVariant="buy"
+                buttonSize="sm"
+              />
+            </div>
+
+            <LinkList links={links} />
+
             <div className="text-center pt-2">
               <Link
                 href="/links"
