@@ -169,16 +169,17 @@ flowchart LR
   └── 키: 'mylink_profile_store' (프로필, 링크 목록, 현재 테마 보관)
 ```
 
-### 디자인 시스템 원칙 (shadcn/ui 기반)
+### 디자인 시스템 원칙 (shadcn/ui 및 Tailwind CSS 기반)
 
-> **모든 UI 구현은 shadcn/ui를 기준으로 진행합니다.**
+> **모든 UI 구현은 shadcn/ui 및 Tailwind CSS를 기준으로 진행하며, 모듈 CSS는 일체 사용하지 않습니다.**
 
 | 항목 | 내용 |
 | :--- | :--- |
-| **컴포넌트 추가** | `npx shadcn@latest add <component>` 명령어로 컴포넌트를 직접 소스에 추가 |
+| **스타일링 원칙** | 모든 스타일은 **Tailwind CSS 유틸리티 클래스로 통일**합니다. **모듈 CSS(`.module.css`)는 사용하지 않습니다.** |
+| **shadcn/ui 기반 컴포넌트** | `Card`, `Button` 등 핵심 UI 요소는 shadcn/ui 패턴(`cva`, `cn`, 합성 컴포넌트 구조)으로 구축하여 재사용성을 극대화합니다. |
+| **컴포넌트 경로** | `src/components/ui/` 하위에 기본 shadcn/ui 컴포넌트 배치, 도메인 컴포넌트(예: `link-card.tsx`, `link-list.tsx`)는 `src/components/`에 배치 |
 | **스타일 정의** | `src/app/globals.css`의 CSS 변수(`--background`, `--primary` 등)로 테마 관리 |
-| **아이콘** | Lucide React (`lucide-react`) 통일 사용 |
-| **컴포넌트 경로** | `src/components/ui/` 하위에 shadcn/ui 컴포넌트 배치 |
+| **아이콘** | Lucide React (`lucide-react`) 및 공식 SVG 아이콘 통일 사용 |
 | **유틸리티** | `src/lib/utils.ts`의 `cn()` 함수로 클래스 병합 |
 
 ---
@@ -191,8 +192,16 @@ flowchart LR
 - [ ] **모바일 반응형 프로필 레이아웃 구축**:
   - 스마트폰 화면 최적화 너비(`max-w-md`) 중앙 정렬
   - 프로필 아바타, 이름, 바이오, SNS 아이콘 바 렌더링
+- [x] **shadcn/ui 기반 재사용 컴포넌트 개발 (Tailwind CSS Only)**:
+  - Card 컴포넌트 (`src/components/ui/card.tsx`) — CVA variant 기반 (default / featured)
+  - LinkCard 컴포넌트 (`src/components/link-card.tsx`) — 개별 링크 렌더링
+  - LinkList 컴포넌트 (`src/components/link-list.tsx`) — 링크 그리드 레이아웃
+- [x] **링크 목록 전용 페이지 구축 (`/links`)**:
+  - `src/data/links.json` 데이터 기반 링크 카드 렌더링
+  - 반응형 그리드 (모바일 1열 / 데스크톱 2열)
+  - Tailwind CSS 기반 스타일링 적용 (모듈 CSS 미사용)
 - [ ] **콘텐츠 블록 컴포넌트 개발**:
-  - 일반 링크 카드 (썸네일, 타이틀, 설명, 호버 액션)
+  - ~~일반 링크 카드 (썸네일, 타이틀, 설명, 호버 액션)~~ ✅
   - 섹션 구분 헤더
   - 유튜브 영상 임베드 플레이어
 - [ ] **시연용 퀵 테마 스위처 추가**:

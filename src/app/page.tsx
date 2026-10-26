@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { LinkList } from "@/components/link-list";
+import type { LinkItem } from "@/lib/data";
+import linksData from "@/data/links.json";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<"links" | "specs" | "projects">("links");
@@ -213,86 +217,17 @@ export default function ProfilePage() {
 
         {/* TAB 1: LINKS & CHANNELS */}
         {activeTab === "links" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {/* GitHub Card */}
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white border border-[#e4e6eb] rounded-2xl p-5 hover:border-[#ced0d4] transition-colors flex items-center justify-between group"
-            >
-              <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-[#0f1419] text-white flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-bold text-sm text-[#0f1419] tracking-tight">GitHub</h3>
-                  <p className="text-xs text-[#65676b]">오픈소스 및 로봇 알고리즘 코드</p>
-                </div>
-              </div>
-              <span className="text-[#8a8d91] group-hover:text-[#0f1419] text-lg font-bold">›</span>
-            </a>
-
-            {/* Velog Blog */}
-            <a
-              href="https://velog.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white border border-[#e4e6eb] rounded-2xl p-5 hover:border-[#ced0d4] transition-colors flex items-center justify-between group"
-            >
-              <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-[#f5f6f8] border border-[#e4e6eb] text-[#0f1419] flex items-center justify-center text-lg font-bold shrink-0">
-                  ✍
-                </div>
-                <div>
-                  <h3 className="font-bold text-sm text-[#0f1419] tracking-tight">기술 블로그 (Velog)</h3>
-                  <p className="text-xs text-[#65676b]">ROS 2, 제어 이론, 트러블슈팅</p>
-                </div>
-              </div>
-              <span className="text-[#8a8d91] group-hover:text-[#0f1419] text-lg font-bold">›</span>
-            </a>
-
-            {/* Notion Portfolio */}
-            <a
-              href="https://notion.so"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white border border-[#e4e6eb] rounded-2xl p-5 hover:border-[#ced0d4] transition-colors flex items-center justify-between group"
-            >
-              <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-[#f5f6f8] border border-[#e4e6eb] text-[#0f1419] flex items-center justify-center text-lg font-bold shrink-0">
-                  📑
-                </div>
-                <div>
-                  <h3 className="font-bold text-sm text-[#0f1419] tracking-tight">노션 포트폴리오</h3>
-                  <p className="text-xs text-[#65676b]">프로젝트 설계서 & 수상 기록</p>
-                </div>
-              </div>
-              <span className="text-[#8a8d91] group-hover:text-[#0f1419] text-lg font-bold">›</span>
-            </a>
-
-            {/* Direct Email */}
-            <a
-              href={`mailto:${email}`}
-              className="bg-[#f5f6f8] border border-[#e4e6eb] rounded-2xl p-5 hover:border-[#0064e0] transition-colors flex items-center justify-between group"
-            >
-              <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-[#0064e0] text-white flex items-center justify-center text-sm font-bold shrink-0">
-                  ✉
-                </div>
-                <div>
-                  <h3 className="font-bold text-sm text-[#0f1419] tracking-tight">직접 메일 보내기</h3>
-                  <p className="text-xs text-[#0064e0] font-semibold">{email}</p>
-                </div>
-              </div>
-              <span className="text-[#0064e0] text-lg font-bold">↗</span>
-            </a>
+          <div className="flex flex-col gap-4">
+            <LinkList links={linksData as LinkItem[]} />
+            <div className="text-center pt-2">
+              <Link
+                href="/links"
+                className="text-xs font-semibold text-[#0064e0] hover:underline inline-flex items-center gap-1"
+              >
+                <span>전용 링크 페이지로 보기</span>
+                <span>›</span>
+              </Link>
+            </div>
           </div>
         )}
 

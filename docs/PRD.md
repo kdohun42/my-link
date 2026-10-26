@@ -98,6 +98,16 @@ flowchart LR
   - 브라우저를 새로고침하거나 껐다 켜도 사용자가 변경한 링크/테마/프로필 정보가 유실 없이 즉시 복원.
 - **STORE-02 (기본 시드 데이터 제공)**:
   - 로컬 스토리지에 저장된 데이터가 없을 경우, 시연에 즉시 활용할 수 있는 풍부한 초기 샘플 데이터(기본 프로필, 5개 이상의 추천 링크, SNS 아이콘, 유튜브 영상 샘플 등)를 자동 로드.
+  - **링크 목록 더미 데이터는 `src/data/links.json`에 JSON 형식으로 정의되어 있으며, Phase 1 시연 전용**으로만 사용한다. Phase 2 이후 Supabase DB 연동 시 실제 데이터로 교체한다.
+
+  | id | title | url |
+  | :- | :---- | :-- |
+  | 1 | GitHub | https://github.com/kdohun42 |
+  | 2 | 기술 블로그 (Velog) | https://velog.io/@kdohun42 |
+  | 3 | 노션 포트폴리오 | https://notion.so |
+  | 4 | LinkedIn | https://linkedin.com/in/kdohun42 |
+  | 5 | YouTube 데모 채널 | https://youtube.com/@kdohun42 |
+  | 6 | 직접 메일 보내기 | mailto:contact@example.com |
 
 ### 4.2 프로필 기본 정보 섹션 (Profile Header)
 - **PROF-01 (아바타 & 프로필 소개)**:
@@ -156,6 +166,8 @@ flowchart LR
 [ 브라우저 클라이언트 ]
   ├── Next.js 16 (App Router, React 19, TypeScript)
   ├── Tailwind CSS v4 (반응형 모바일 UI, 테마 토글)
+  ├── shadcn/ui (base-nova 스타일, 재사용 가능 UI 컴포넌트)
+  ├── class-variance-authority (CVA, 컴포넌트 variant 관리)
   ├── Lucide React (소셜 미디어 및 링크 아이콘)
   └── Zustand (create & persist 미들웨어)
            │
@@ -163,6 +175,20 @@ flowchart LR
 [ 브라우저 로컬 스토리지 (localStorage) ]
   └── 키: 'mylink_profile_store' (프로필, 링크 목록, 현재 테마 보관)
 ```
+
+---
+
+## 6.1 UI 스타일링 & 컴포넌트 규칙
+
+> ⚠️ **중요**: 아래 규칙은 모든 Phase에서 일관되게 적용됩니다.
+
+| 규칙 | 설명 |
+| :--- | :--- |
+| **Tailwind CSS Only** | 모든 스타일링은 Tailwind CSS 유틸리티 클래스로 작성합니다. **CSS 모듈(`.module.css`) 또는 별도 CSS 파일을 통한 컴포넌트 스타일링은 사용하지 않습니다.** |
+| **shadcn/ui 기반 컴포넌트** | 공통 UI 요소(Card, Button 등)는 shadcn/ui 패턴(`cva` + `cn`)으로 `src/components/ui/`에 작성하여 재사용합니다. |
+| **조합 가능한 구조** | Card, Dialog 등 복합 컴포넌트는 `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`처럼 서브 컴포넌트로 조합 가능하게 설계합니다. |
+| **Variant 관리** | 컴포넌트 스타일 변형은 `class-variance-authority`(CVA)의 `cva()` 함수로 정의하고, `cn()` 유틸리티로 병합합니다. |
+| **아이콘 라이브러리** | Lucide React를 기본 아이콘 라이브러리로 사용합니다. |
 
 ---
 
@@ -174,8 +200,15 @@ flowchart LR
 - [ ] **모바일 반응형 프로필 레이아웃 구축**:
   - 스마트폰 화면 최적화 너비(`max-w-md`) 중앙 정렬
   - 프로필 아바타, 이름, 바이오, SNS 아이콘 바 렌더링
+- [x] **shadcn/ui 기반 재사용 컴포넌트 개발 (Tailwind CSS Only)**:
+  - Card 컴포넌트 (`src/components/ui/card.tsx`) — CVA variant 기반 (default / featured)
+  - LinkCard 컴포넌트 (`src/components/link-card.tsx`) — 개별 링크 렌더링
+  - LinkList 컴포넌트 (`src/components/link-list.tsx`) — 링크 그리드 레이아웃
+- [x] **링크 목록 전용 페이지 구축 (`/links`)**:
+  - `src/data/links.json` 데이터 기반 링크 카드 렌더링
+  - 반응형 그리드 (모바일 1열 / 데스크톱 2열)
 - [ ] **콘텐츠 블록 컴포넌트 개발**:
-  - 일반 링크 카드 (썸네일, 타이틀, 설명, 호버 액션)
+  - ~~일반 링크 카드 (썸네일, 타이틀, 설명, 호버 액션)~~ ✅
   - 섹션 구분 헤더
   - 유튜브 영상 임베드 플레이어
 - [ ] **시연용 퀵 테마 스위처 추가**:
