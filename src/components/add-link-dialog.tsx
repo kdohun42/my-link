@@ -126,6 +126,10 @@ export function AddLinkDialog({
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
 
+  // Firestore submission states
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
   const resetForm = () => {
     setTitle("")
     setUrl("")
@@ -136,6 +140,8 @@ export function AddLinkDialog({
     setFeatured(false)
     setErrors({})
     setTouched({})
+    setIsSubmitting(false)
+    setSubmitError(null)
   }
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -260,7 +266,7 @@ export function AddLinkDialog({
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     // Validate all fields
@@ -305,12 +311,24 @@ export function AddLinkDialog({
       featured,
     }
 
-    const created = addLink(newLinkData)
-    onLinkAdded?.(created)
+    setIsSubmitting(true)
+    setSubmitError(null)
 
-    // Close modal and reset form
-    setOpen(false)
-    resetForm()
+    try {
+      const created = await addLink(newLinkData)
+      onLinkAdded?.(created)
+
+      // Close modal and reset form
+      setOpen(false)
+      resetForm()
+    } catch (err) {
+      console.error("Firestore 링크 추가 실패:", err)
+      setSubmitError(
+        "Firestore (user/anonymous/links)에 저장하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const hasAnyError = Boolean(errors.title || errors.url || errors.description || errors.emoji)
@@ -335,13 +353,21 @@ export function AddLinkDialog({
           </div>
           <DialogTitle>새로운 링크 추가</DialogTitle>
           <DialogDescription>
-            프로필 페이지에 노출될 새로운 링크 정보를 입력해주세요. 로컬 상태로 즉시 반영됩니다.
+            프로필 페이지에 노출될 새로운 링크 정보를 입력해주세요. Firestore(user/anonymous/links)에 안전하게 저장됩니다.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4.5" noValidate>
-          {/* General Error Notice */}
-          {hasAnyError && (
+          {/* Firestore Error Notice */}
+          {submitError && (
+            <div className="flex items-center gap-2 bg-[#e02424]/10 border border-[#e02424]/20 text-[#e02424] text-xs font-semibold px-3.5 py-2.5 rounded-xl">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{submitError}</span>
+            </div>
+          )}
+
+          {/* General Validation Error Notice */}
+          {hasAnyError && !submitError && (
             <div className="flex items-center gap-2 bg-[#e02424]/10 border border-[#e02424]/20 text-[#e02424] text-xs font-semibold px-3.5 py-2.5 rounded-xl">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>입력 정보를 확인하고 잘못된 항목을 수정해주세요.</span>
@@ -552,14 +578,22 @@ export function AddLinkDialog({
                 <Button
                   type="button"
                   variant="outline"
+                  disabled={isSubmitting}
                   onClick={() => handleOpenChange(false)}
                 >
                   취소
                 </Button>
               }
             />
-            <Button type="submit" variant="buy">
-              링크 추가하기
+            <Button type="submit" variant="buy" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
+                  <span>저장 중...</span>
+                </div>
+              ) : (
+                "링크 추가하기"
+              )}
             </Button>
           </DialogFooter>
         </form>

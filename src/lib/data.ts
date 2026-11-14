@@ -1,8 +1,8 @@
 // 링크 목록 더미 데이터
 
 export type LinkItem = {
-  /** 고유 식별자 */
-  id: number;
+  /** 고유 식별자 (Firestore Doc ID 또는 더미 ID) */
+  id: number | string;
   /** 링크 카드 제목 */
   title: string;
   /** 부제목 또는 설명 */
@@ -21,6 +21,10 @@ export type LinkItem = {
   external?: boolean;
   /** 강조 표시 여부 (이메일처럼 primary 스타일) */
   featured?: boolean;
+  /** 등록 시간 (Firestore timestamp 등) */
+  createdAt?: unknown;
+  /** 등록 시간 - 사용자 지정 필드명 */
+  createAt?: unknown;
 };
 
 export const links: LinkItem[] = [
